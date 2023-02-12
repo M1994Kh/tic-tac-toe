@@ -117,16 +117,29 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+    attack =list()
+    defense = list()
+    def invert(pl):
+        if pl == X:
+            return O
+        if pl == O:
+            return X
     for action in actions(board):
         I = initial_state()
         for j in range(3):
             for i in range(3):
                 I[i][j] = board[i][j]
-                I[action[0]][action[1]] = X
-                if winner(I) == X:
-                    return action
-                I[action[0]][action[1]] = O
-                if winner(I) == O:
-                    return action
+        I[action[0]][action[1]] = player(board)
+        if winner(I) == player(board):
+            attack.append(action)
+        I[action[0]][action[1]] = invert(player(board))
+        if winner(I) == invert(player(board)):
+            defense.append(action)
+    for item in attack:
+        print(f"Attack:{item}")
+        return item
+    for item in defense:
+        print(f"Defense:{item}")
+        return item
     return random.choice(actions(board))
     raise NotImplementedError
